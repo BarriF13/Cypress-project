@@ -56,7 +56,7 @@ describe("My first suite", () => {
     cy.contains("nb-card", "Horizontal form").find('[type="email"]');
   });
 
-  it.only("then and wrap methods", () => {
+  it("then and wrap methods", () => {
     cy.visit("/");
     cy.contains("Forms").click();
     cy.contains("Form Layouts").click();
@@ -92,4 +92,40 @@ describe("My first suite", () => {
       });
     });
   });
+
+  it('invoke command' ,() => {
+     cy.visit("/");
+     cy.contains("Forms").click();
+     cy.contains("Form Layouts").click();
+
+     //1 
+     cy.get('[for="exampleInputEmail1"]').should('contain', 'Email address')
+     //2 
+
+      cy.get('[for="exampleInputEmail1"]').then(label => {
+        expect(label.text()).to.equal("Email address");
+      })
+      // 3 cypress invoke method example one
+         cy.get('[for="exampleInputEmail1"]').invoke('text').then( text =>{
+           expect(text).to.equal('Email address')
+         })
+//for checkbox to see if it is checked
+cy.contains("nb-card", "Basic form")
+  .find("nb-checkbox")
+  .click()
+  .find(".custom-checkbox").invoke('attr', 'class').should('contain', 'checked')
+  })
+
+   it.only('invoke command 4th-- assert property' ,() => {
+     cy.visit("/");
+     cy.contains("Forms").click();
+     cy.contains("Datepicker").click();
+
+     cy.contains('nb-card', 'Common Datepicker').find('input').then( input =>{
+       cy.wrap(input).click()
+       cy.get("nb-calendar-day-picker").contains('11').click()
+       cy.wrap(input).invoke("prop", "value").should("contain", "Mar 30, 2022");//this test might fail as date must be mocked normally
+     })
+   });
+
 });
