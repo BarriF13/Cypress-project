@@ -93,39 +93,75 @@ describe("My first suite", () => {
     });
   });
 
-  it('invoke command' ,() => {
-     cy.visit("/");
-     cy.contains("Forms").click();
-     cy.contains("Form Layouts").click();
+  it("invoke command", () => {
+    cy.visit("/");
+    cy.contains("Forms").click();
+    cy.contains("Form Layouts").click();
 
-     //1 
-     cy.get('[for="exampleInputEmail1"]').should('contain', 'Email address')
-     //2 
+    //1
+    cy.get('[for="exampleInputEmail1"]').should("contain", "Email address");
+    //2
 
-      cy.get('[for="exampleInputEmail1"]').then(label => {
-        expect(label.text()).to.equal("Email address");
-      })
-      // 3 cypress invoke method example one
-         cy.get('[for="exampleInputEmail1"]').invoke('text').then( text =>{
-           expect(text).to.equal('Email address')
-         })
-//for checkbox to see if it is checked
-cy.contains("nb-card", "Basic form")
-  .find("nb-checkbox")
-  .click()
-  .find(".custom-checkbox").invoke('attr', 'class').should('contain', 'checked')
-  })
+    cy.get('[for="exampleInputEmail1"]').then((label) => {
+      expect(label.text()).to.equal("Email address");
+    });
+    // 3 cypress invoke method example one
+    cy.get('[for="exampleInputEmail1"]')
+      .invoke("text")
+      .then((text) => {
+        expect(text).to.equal("Email address");
+      });
+    //for checkbox to see if it is checked
+    cy.contains("nb-card", "Basic form")
+      .find("nb-checkbox")
+      .click()
+      .find(".custom-checkbox")
+      .invoke("attr", "class")
+      .should("contain", "checked");
+  });
 
-   it.only('invoke command 4th-- assert property' ,() => {
-     cy.visit("/");
-     cy.contains("Forms").click();
-     cy.contains("Datepicker").click();
+  it("invoke command 4th-- assert property", () => {
+    cy.visit("/");
+    cy.contains("Forms").click();
+    cy.contains("Datepicker").click();
 
-     cy.contains('nb-card', 'Common Datepicker').find('input').then( input =>{
-       cy.wrap(input).click()
-       cy.get("nb-calendar-day-picker").contains('11').click()
-       cy.wrap(input).invoke("prop", "value").should("contain", "Mar 30, 2022");//this test might fail as date must be mocked normally
-     })
-   });
+    cy.contains("nb-card", "Common Datepicker")
+      .find("input")
+      .then((input) => {
+        cy.wrap(input).click();
+        cy.get("nb-calendar-day-picker").contains("11").click();
+        cy.wrap(input)
+          .invoke("prop", "value")
+          .should("contain", "Mar 30, 2022"); //this test might fail as date must be mocked normally
+      });
+  });
+  it("checkbox", () => {
+    cy.visit("/");
+    cy.contains("Forms").click();
+    cy.contains("Form Layouts").click();
 
+    cy.contains("nb-card", "Using the Grid")
+      .find('[type="radio"]')
+      .then((radioButtons) => {
+        cy.wrap(radioButtons)
+          .first()
+          .check({ force: true })
+          .should("be.checked");
+
+        cy.wrap(radioButtons).eq(1).check({ force: true }).should("be.checked");
+        cy.wrap(radioButtons).first().should("not.be.checked");
+
+        cy.wrap(radioButtons).eq(2).should("be.disabled");
+      });
+  });
+
+  it.only("checkbox", () => {
+    cy.visit("/");
+    cy.contains("Modal & Overlays").click();
+    cy.contains("Toastr").click();
+
+    cy.get('[type="checkbox"]').eq(0).click({ force: true})
+    cy.get('[type="checkbox"]').eq(0).check({force: true})
+
+  });
 });
